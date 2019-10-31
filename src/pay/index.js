@@ -23,10 +23,8 @@ export const config=()=>{
 }
 
 
-
-
 export const pay=(requestUrl="", data={},that)=> {
-        // console.log(button)
+        
         // request.post('/ticket',{
         //    url:window.location.href.split('#')[0]
         // }).then(res=>{
@@ -46,26 +44,18 @@ export const pay=(requestUrl="", data={},that)=> {
         wx.ready(()=>{
             // button.onclick=()=>{
                 request.post(requestUrl,data).then(res=>{
-                    var data1=res.data
+                    if(res.code==201){
+                        resolve()
+                        return;
+                    }
+                    
+                    var data1=res.data;
                     wx.chooseWXPay({
-                        nonceStr: data1.nonceStr, // 支付签名随机串
-                        package: data1.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
-                        paySign: data1.paySign, // 支付签名
-                        signType: data1.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-                        timestamp: data1.timeStamp, // 支付签名时间戳
-                        // success:(result)=>{
-                        //     that.$toast.success('支付成功')
-                        //     setTimeout(()=>{
-                        //         that.$router.push('/paysuccess')
-                        //     },1500)
-                             
-                        // },
-                        // cancel:(result)=>{
-                        //     that.$toast.success('取消支付')
-                        // },
-                        // fail:()=>{
-                        //     that.$toast.success('支付失败')
-                        // }
+                        nonceStr: data1.nonceStr, 
+                        package: data1.package, 
+                        paySign: data1.paySign, 
+                        signType: data1.signType, 
+                        timestamp: data1.timeStamp, 
                         success: function (res) {
                             that.hide()
                             
@@ -75,13 +65,10 @@ export const pay=(requestUrl="", data={},that)=> {
                         cancel: function (res) {
                             that.$toast.fail('支付取消')
                             that.hide()
-                            
                         },
                         fail: function (res) {
                             that.$toast.fail('支付失败')
                             that.hide()
-                            
-                           
                         }
                         
                     })

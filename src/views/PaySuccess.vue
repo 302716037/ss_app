@@ -3,17 +3,12 @@
         <img src="@/assets/index/dui.png" alt="" class="img">
         <div class="box-index" style="background:#fff;">
             <h2 style="margin:1rem 0 0 0;">“支付成功”</h2>
-            <!-- <p style="margin-top:1rem;">
-                购买成功后，请将报名情趣浸泡馆的支付凭证发给维维顾问，否则将无法进入项目学习。         
+            <p style="margin-top:1rem;">
+               体魄私教训练馆拥有最完整的私密性爱训练体系，致力于通过科学合理的训练帮助你收获更多的快乐。       
             </p>
-            <p>
-                您可以在微信好友中搜索：维维顾问。
-            </p>
-            <p>
-                如果您还未添加维维顾问，请扫描二维码添加好友。
-            </p> -->
+           
             <button class="btn" @click="jumpStudy">
-                回到首页
+                点击这里了解
             </button>
         </div>
     </div>

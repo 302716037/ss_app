@@ -31,53 +31,35 @@ export default {
 				}
 			},
         getCode(){
-            
             var that=this
-            if(window.location.search.indexOf('code')>0){
+          
+            if(
+                window.location.search.indexOf('code')>0
+            ){
                  window.localStorage.code= that.getQueryString('code')
+                //  window.localStorage.code= '001Y6RrM1Gs6871J1pqM1vf7sM1Y6RrG'
+
+                 console.log(window.localStorage.code)
                  that.$post('/wxlogin',{
                         code:window.localStorage.code
                     }).then((res)=>{
                         console.log(res)
                         window.sessionStorage.openId=res.data.openid
                         window.localStorage.uid=res.data.id
-                    
                         window.location.href=window.localStorage.authBeforeFullPath
-
                     }).catch((err)=>{
-
                         console.log(err)
-                       
                     })
             }else{
                 window.localStorage.redirectUrl=window.location.href
                 window.location.href=`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${that.appId}&redirect_uri=${encodeURIComponent(window.localStorage.redirectUrl)}&response_type=code&scope=snsapi_userinfo&state=123&connect_redirect=1#wechat_redirect`
                 window.sessionStorage.code= this.getQueryString('code')
-                console.log()
             }
-
-
-            
-
         }
-
-
-
-
-
-
-
-
     },
     
     created () {
-        
-
-        
        this.getCode()
-
-
-
         
         //window.location.href=`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&redirect_uri=${window.localStorage.redirectURL}&response_type=code&scope=snsapi_base&state=123&connect_redirect=1#wechat_redirect`
 

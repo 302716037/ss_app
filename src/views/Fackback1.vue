@@ -2,11 +2,9 @@
     <div>
         <div class="box-index" style="width:75vw;padding:2rem">
             <div class="text">
-               购买成功后，请将报名【情趣浸泡馆】的支付凭证发给欣欣老师，否则将无法进入项目学习。
-                您可以在微信好友中搜索：欣欣老师。
-                如果您还未添加欣欣老师，请扫描二维码添加好友。
+               {{content}}
             </div>
-            <img src="@/assets/index/erweima.jpg" style="width:100%;margin:1rem auto;">
+            <img v-lazy="'http://www.shanshangdajiazu.com'+cover" style="width:100%;margin:1rem auto;">
             <div class="bottom">
                 扫一扫二维码图案，进行咨询
             </div>
@@ -17,9 +15,22 @@
 export default {
     data(){
         return{
-
+            content:"",
+            cover:""
         }
-    }
+    },
+    methods:{
+        getData(){
+            let that=this;
+            that.$get('/myService').then(res=>{
+                that.content=res.data.content
+                that.cover=res.data.cover
+            })
+        }
+    },
+    created() {
+        this.getData()
+    },
 }
 </script>
 

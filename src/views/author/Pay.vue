@@ -1,10 +1,8 @@
 <template>
     <div class="container">
         
-        请在别的浏览器打开支付
+        请在别的浏览器打开页面
 
-
-        
     </div>
 </template>
 

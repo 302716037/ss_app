@@ -43,8 +43,6 @@ export const post=(url,data={})=>{
 }
 
 
-
-//axios请求拦截
 axios.interceptors.request.use(
     config=>{
        

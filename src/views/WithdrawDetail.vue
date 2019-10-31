@@ -3,15 +3,17 @@
         <div v-if="list.length>0">
             <div class="box" v-for="(item,index) in list" :key="index">
                 <div>
-                    <div class="title1">
-                        提现金额：{{item.money}}
+                    <div class="time" style="color:#000">
+                        提现：{{item.money}}
                     </div>
-                    <div class="time">
-                        {{item.addtime}}
-                    </div>
+                    <div class="time" style="color:#000">到账 ：{{item.price}}</div>
+                    <div class="time" style="color:#000">手续费：{{item.scale}}元</div>
                 </div>
                 <div class="money">
-                    手续费 ：{{item.price}}
+                    <div class="time">提现状态：{{item.status==0?"申请中":item.status==1?"已提现":"已拒绝"}}</div>
+                     <div class="time">
+                        {{item.addtime}}
+                    </div>
                 </div>
             </div>
             <div style="text-align:center;color:#999;">
@@ -72,6 +74,19 @@ export default {
     font-size: 1.2rem;
 }
 .empty{
-    text-align: center;
+    
+    background:rgb(45, 52, 62);
+    width:100vw;
+
+height:100vh;
 }
+img{
+      
+        width: 100%;
+        display: block;
+        height: 100%;
+        margin: auto;
+        
+       
+    }
 </style>

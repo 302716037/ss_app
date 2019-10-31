@@ -5,11 +5,18 @@ Vue.use(Router)
 
 export default new Router({
   scrollBehavior (to, from, savedPosition) {
-
       return {x:0,y:0}
-    
   },
   routes: [
+    {
+      path:'/rou',
+      name:'rou',
+      meta:{
+        keepAlive:true,
+        title:'入门课程',
+      },
+      component: ()=>import('./views/rounew')
+    },
     {
       path: '/',
       name: 'home',
@@ -35,7 +42,7 @@ export default new Router({
         keepAlive:true,
         title:"首页"
       },
-      component: () => import('./views/Index')
+      component: () => import('./views/indexnew')
     },
     {
       path: '/index1',

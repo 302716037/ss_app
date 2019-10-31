@@ -1,10 +1,7 @@
 <template>
     <div v-if="page" >
     <div class="container" ref="imageDom">
-       
-        
             <img v-lazy="'http://www.shanshangdajiazu.com'+qrcode" alt="" class="img">
-       
     </div>
      <button class="btn" @click="showPop">
             邀请方式
@@ -141,7 +138,6 @@ export default {
 <style scoped>
 .container{
     width:96vw ;
-    
     margin: .5rem auto 0;
  } 
 .bg{

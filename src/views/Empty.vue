@@ -1,5 +1,7 @@
 <template>
-    <div>
+    <div style="background:rgb(45, 52, 62);width:100vw;
+
+　　height:100vh;">
         <img src="@/assets/center/empty.png" alt="" class="img">
     </div>
 </template>
@@ -18,8 +20,11 @@ export default {
 
 <style scoped>
     .img{
-        margin: 5rem auto;
-        width: 50vw;
+       
+        width: 100%;
         display: block;
+        height: 100%;
+        margin: auto;
+       
     }
 </style>

@@ -15,7 +15,7 @@
             <img v-lazy="item.imgUrl" alt="" class="img">
             <div class="uname">{{item.nickname}}</div>
             <div class="money">
-                成交金额：￥{{item.money}}
+                成交金额：￥{{item.money.toFixed(2)}}
             </div>
         </div>
         

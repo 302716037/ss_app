@@ -4,7 +4,7 @@
         <div class="box-index" style="width:90vw;">
             <div style="display:flex;align-items:center">
                 <img src="@/assets/center/laba.png" alt="" class="laba">
-                <span class="level">{{level.level_name}}</span>
+                <span class="level">体魄私教训练馆</span>
             </div>
             <div class="push">
                 直接推广佣金比例：{{level.direct}}%，间接推广比例：{{level.indirect}}%

@@ -132,6 +132,12 @@ export default {
     },
     methods:{
         showPopup(){
+            console.log()
+            if(this.info.status){
+                this.$router.push('/fackback1')
+                return
+            }
+
             this.show=true
         },
         hide(){
@@ -206,25 +212,25 @@ export default {
                 }
 
                 that.$(that.$refs.xiangmu1).bind('click',function (){
-                    if(document.documentElement.scrollTop){
-                        console.log(document.documentElement.scrollTop=document.getElementById('posi1').offsetTop-50)
-                    }else{
-                        console.log(document.body.scrollTop=document.getElementById('posi1').offsetTop-50)
-                    } 
+                    
+                       document.documentElement.scrollTop=document.getElementById('posi1').offsetTop-50
+                    
+                       document.body.scrollTop=document.getElementById('posi1').offsetTop-50
+                    
                 })
                 that.$(that.$refs.xiangmu2).bind('click',function (){
-                    if(document.documentElement.scrollTop){
-                        console.log(document.documentElement.scrollTop=document.getElementById('posi2').offsetTop)
-                    }else{
-                        console.log(document.body.scrollTop=document.getElementById('posi2').offsetTop)
-                    }
+                   
+                    document.documentElement.scrollTop=document.getElementById('posi2').offsetTop
+                    
+                    document.body.scrollTop=document.getElementById('posi2').offsetTop
+                    
                 })
                 that.$(that.$refs.xiangmu3).bind('click',function (){
-                    if(document.documentElement.scrollTop){
-                        console.log(document.documentElement.scrollTop=document.getElementById('posi3').offsetTop)
-                    }else{
-                        console.log(document.body.scrollTop=document.getElementById('posi3').offsetTop)
-                    }
+                   
+                    document.documentElement.scrollTop=document.getElementById('posi3').offsetTop
+                    
+                    document.body.scrollTop=document.getElementById('posi3').offsetTop
+                   
                    
                 })
                 
@@ -269,7 +275,7 @@ export default {
         },
         getData(){
             let that=this;
-            that.$get('/five').then((res)=>{
+            that.$post('/five',{uid:window.localStorage.uid}).then((res)=>{
                 console.log(res)
                 that.info=res.data;
                 setTimeout(()=>{

@@ -1,0 +1,923 @@
+<template>
+  <div class="index">
+    <mu-ripple color="#2196f3" :opacity="0.2" style="width:100vw;height:100vh">
+      <img v-lazy="'http://www.shanshangdajiazu.com'+banner" alt style="width:100vw;height:100vh" />
+    </mu-ripple>
+
+    <div class="box-index" style="overflow:hidden;height:9rem;padding:0;width:84vw;">
+      <div :style="`transform:translateY(${-1.69*num}rem)`" class="trans">
+        <div class="box-line" v-for="(item,index) in list" :key="index">
+          <img v-lazy="item.imgUrl" alt />
+          <div>
+            <span>{{item.nickname}}</span> 已成功订阅！
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="title">应用训练</h2>
+    <h4 class="sub-title" style="font-size:.8rem;">老师示范 &nbsp; 学员跟练</h4>
+
+    <div class="subbox">
+      <div
+        class="wow bounceInDown"
+        data-wow-delay="0.2s"
+        style="border-radius:6px;box-shadow:0px 4px 10px 0px rgba(153,174,223,0.57);width:31vw"
+        @click="rou()"
+      >
+        <!--@click="level<1?showPopup(1,content1.id):jumpStudy(content1.id)"-->
+        <img v-lazy="'http://www.shanshangdajiazu.com'+content1.img" alt />
+        <h4>爱享训练</h4>
+        <p>认识自己，把握自己，爱自己</p>
+      </div>
+
+      <div
+        class="wow bounceInDown"
+        data-wow-delay="0.5s"
+        style="border-radius:6px;box-shadow:0px 4px 10px 0px rgba(153,174,223,0.57);width:31vw"
+        @click="level>1?jumpStudy(content2.id):showMiddle(2)"
+      >
+        <img v-lazy="'http://www.shanshangdajiazu.com'+content2.img" alt />
+        <h4>动感强化训练</h4>
+        <p>睡服她，让她欲罢 不能</p>
+      </div>
+      <div
+        class="wow bounceInDown"
+        data-wow-delay="0.8s"
+        style="border-radius:6px;box-shadow:0px 4px 10px 0px rgba(153,174,223,0.57);width:31vw"
+        @click="level>1?jumpStudy(content3.id):showMiddle(2)"
+      >
+        <img v-lazy="'http://www.shanshangdajiazu.com'+content3.img" alt />
+        <h4>情侣双休训练</h4>
+        <p>解锁性爱的高阶玩法</p>
+      </div>
+    </div>
+
+    <div
+      style="font-size:1.1rem;font-family:SourceHanSansCN-Regular;font-weight:400;color:rgba(255,73,74,1);padding-left:1rem"
+    >￥{{money1}}</div>
+
+    <h2 class="title">拔高训练</h2>
+    <div class="wow bounceInLeft" data-wow-delay="0.3s">
+      <img
+        v-lazy="'http://www.shanshangdajiazu.com'+sort2.img"
+        alt
+        class="img"
+        @click="level>1?jumpStudy(sort2.id):showMiddle(2)"
+      />
+    </div>
+
+    <h2 class="title">{{sort3.title}}</h2>
+    <div class="wow bounceInRight" data-wow-delay="0.6s">
+      <img
+        v-lazy="'http://www.shanshangdajiazu.com'+sort3.img"
+        alt
+        class="img"
+        @click="level<2?showMiddle(2):showAnswer()"
+      />
+    </div>
+
+    <div class="bottom">提升魅力，重新定义品质生活</div>
+    <div style="width:100vw;height:3rem;"></div>
+
+    <div class="bottom-div">
+      <button class="bottom-btn" @click="showPopup(2)">￥{{parseInt(money2)}}元立即开通</button>
+    </div>
+
+    <!-- 支付 -->
+    <van-popup v-model="show" round position="bottom" :style="{ height: '20%' }">
+      <div style="height:100%;background: #fff;">
+        <div class="pop">
+          <div>请选择支付方式</div>
+          <img src="@/assets/index/hide.png" @click="hide" />
+        </div>
+        <div class="weixin" ref="pay" @click="wxPay">
+          <img src="@/assets/index/weixin.png" alt />
+          <span>微信支付</span>
+        </div>
+        <div class="ali" @click="Alipay">
+          <img src="@/assets/index/ali.png" alt />
+          <span>支付宝支付</span>
+        </div>
+        <div style="height:1.2rem;background: #fff;"></div>
+      </div>
+    </van-popup>
+
+    <!-- 提示 -->
+    <van-popup v-model="middleShow" transition="fade">
+      <div style="position:relative;top:0;left:0;width:64vw;">
+        <div style="background:transparent;height:2rem;">
+          <img
+            src="@/assets/index/del.png"
+            style="width:1.8rem;height:1.8rem;float:right;"
+            @click="hide"
+          />
+        </div>
+        <img
+          src="@/assets/index/tip2.png"
+          alt
+          style="width:75%;margin:0 auto;display:block;"
+          @click="showPopup(2)"
+        />
+      </div>
+    </van-popup>
+
+    <!-- 答题 -->
+    <van-popup v-model="anwserShow" transition="fade">
+      <div style="position:relative;top:0;left:0;width:80vw;">
+        <img
+          src="@/assets/index/del.png"
+          style="width:1.2rem;height:1.2rem;position:absolute;top:0.5rem;right:0.5rem"
+          @click="hide"
+        />
+        <img src="@/assets/index/answerbg.png" style="width:100%;" />
+        <div class="answer-title">请回答以下问题</div>
+        <div class="answer-list">
+          <!-- 第一题 -->
+          <mu-scale-transition>
+            <div class="answer" v-show="number==1">
+              <div class="answer-tit">经常做凯格尔运动，什么地方的肌肉会变的强大 ( )</div>
+              <div class="answer-content">
+                <div>
+                  <van-radio-group v-model="radio1">
+                    <van-cell-group>
+                      <van-cell
+                        title="A 胸肌"
+                        :class="radio1==1?'select':'no-select'"
+                        clickable
+                        @click="radio1 = '1'"
+                      >
+                        <van-radio slot="left-icon" name="1" />
+                      </van-cell>
+                      <van-cell
+                        title="B 小腿部肌肉"
+                        :class="radio1==2?'select':'no-select'"
+                        clickable
+                        @click="radio1 = '2'"
+                      >
+                        <van-radio slot="left-icon" name="2" />
+                      </van-cell>
+                      <van-cell
+                        title="C 盆底的肌肉"
+                        :class="radio1==3?'select':'no-select'"
+                        clickable
+                        @click="radio1 = '3'"
+                      >
+                        <van-radio slot="left-icon" name="3" />
+                      </van-cell>
+                      <van-cell
+                        title="D 背部的肌肉"
+                        :class="radio1==4?'select':'no-select'"
+                        clickable
+                        @click="radio1 = '4'"
+                      >
+                        <van-radio slot="left-icon" name="4" />
+                      </van-cell>
+                    </van-cell-group>
+                  </van-radio-group>
+                </div>
+                <div class="right" v-if="anshow1">* 正确答案为：C</div>
+              </div>
+            </div>
+          </mu-scale-transition>
+
+          <!-- 第二题 -->
+          <mu-scale-transition>
+            <div class="answer" v-show="number==2">
+              <div class="answer-tit">是么时候适合做壮腰健肾训练 ( )</div>
+              <div class="answer-content">
+                <div>
+                  <van-radio-group v-model="radio2">
+                    <van-cell-group>
+                      <van-cell
+                        title="A 吃饭完立马可以做"
+                        :class="radio2==1?'select':'no-select'"
+                        clickable
+                        @click="radio2 = '1'"
+                      >
+                        <van-radio slot="left-icon" name="1" />
+                      </van-cell>
+                      <van-cell
+                        title="B 工作很累的时候"
+                        :class="radio2==2?'select':'no-select'"
+                        clickable
+                        @click="radio2 = '2'"
+                      >
+                        <van-radio slot="left-icon" name="2" />
+                      </van-cell>
+                      <van-cell
+                        title="C 身体虚弱的时候"
+                        :class="radio2==3?'select':'no-select'"
+                        clickable
+                        @click="radio2 = '3'"
+                      >
+                        <van-radio slot="left-icon" name="3" />
+                      </van-cell>
+                      <van-cell
+                        title="D 精力充沛的时候"
+                        :class="radio2==4?'select':'no-select'"
+                        clickable
+                        @click="radio2 = '4'"
+                      >
+                        <van-radio slot="left-icon" name="4" />
+                      </van-cell>
+                    </van-cell-group>
+                  </van-radio-group>
+                </div>
+                <div class="right" v-if="anshow2">* 正确答案为：D</div>
+              </div>
+            </div>
+          </mu-scale-transition>
+
+          <!-- 第三题 -->
+          <mu-scale-transition>
+            <div class="answer" v-show="number==3">
+              <div class="answer-tit">TK运动，是哪两项运动 ( )</div>
+              <div class="answer-content">
+                <div>
+                  <van-radio-group v-model="radio3">
+                    <van-cell-group>
+                      <van-cell
+                        title="A 提肛和鼻子用力吸气"
+                        :class="radio3==1?'select':'no-select'"
+                        clickable
+                        @click="radio3 = '1'"
+                      >
+                        <van-radio slot="left-icon" name="1" />
+                      </van-cell>
+                      <van-cell
+                        title="B 提肛和收缩盆底的肌肉"
+                        :class="radio3==2?'select':'no-select'"
+                        clickable
+                        @click="radio3 = '2'"
+                      >
+                        <van-radio slot="left-icon" name="2" />
+                      </van-cell>
+                      <van-cell
+                        title="C 咬紧牙关和鼻子用力吸气"
+                        :class="radio3==3?'select':'no-select'"
+                        clickable
+                        @click="radio3 = '3'"
+                      >
+                        <van-radio slot="left-icon" name="2" />
+                      </van-cell>
+                      <van-cell
+                        title="D 收缩盆底肌肉和要紧牙关"
+                        :class="radio3==4?'select':'no-select'"
+                        clickable
+                        @click="radio3 = '4'"
+                      >
+                        <van-radio slot="left-icon" name="2" />
+                      </van-cell>
+                    </van-cell-group>
+                  </van-radio-group>
+                </div>
+                <div class="right" v-if="anshow3">* 正确答案为：B</div>
+              </div>
+            </div>
+          </mu-scale-transition>
+
+          <!-- 第四题 -->
+          <mu-scale-transition>
+            <div class="answer" v-show="number==4">
+              <div class="answer-tit">下面说法正确的是 ( )</div>
+              <div class="answer-content">
+                <div>
+                  <van-radio-group v-model="radio4">
+                    <van-cell-group>
+                      <van-cell
+                        title="A 做TK运行时，鼻子是慢慢的吸气"
+                        :class="radio4==1?'select':'no-select'"
+                        clickable
+                        @click="radio4 = '1'"
+                      >
+                        <van-radio slot="left-icon" name="1" />
+                      </van-cell>
+                      <van-cell
+                        title="B 做TK运动时，必须配合上三大要点"
+                        :class="radio4==2?'select':'no-select'"
+                        clickable
+                        @click="radio4 = '2'"
+                      >
+                        <van-radio slot="left-icon" name="2" />
+                      </van-cell>
+                      <van-cell
+                        title="C 做TK运动时，牙关始终是要紧的"
+                        :class="radio4==3?'select':'no-select'"
+                        clickable
+                        @click="radio4 = '3'"
+                      >
+                        <van-radio slot="left-icon" name="2" />
+                      </van-cell>
+                      <van-cell
+                        title="D 做TK运动时，可以不闭嘴"
+                        :class="radio4==4?'select':'no-select'"
+                        clickable
+                        @click="radio4 = '4'"
+                      >
+                        <van-radio slot="left-icon" name="2" />
+                      </van-cell>
+                    </van-cell-group>
+                  </van-radio-group>
+                </div>
+                <div class="right" v-if="anshow4">* 正确答案为：B</div>
+              </div>
+            </div>
+          </mu-scale-transition>
+        </div>
+
+        <button class="next" @click="next">下一题</button>
+      </div>
+    </van-popup>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      show: false,
+      list: [
+        {
+          id: 105,
+          openid: "oKHJk53i405raqDzGbeKwI8J2Wdc",
+          imgUrl:
+            "http://thirdwx.qlogo.cn/mmopen/9duOI5FSeAGIf8M1o9LwHA6NlQLPjrJDtwhMpsTPd2egI5x1V3bvZwBZ9icLaxUkryy2KLAgweNU3yEwQaEFyM6iaVl7jLPicdb/132",
+          money: "0.00",
+          pid: 0,
+          pid1: 0,
+          level: 2,
+          nickname: "Simms",
+          sex: 1,
+          qrcode: "/qrcode/bg_code/NameId_105.jpg",
+          txmoney: "0.00",
+          last_time: 1572434500,
+          addtime: 1572233059,
+          earnings: "0.00",
+          message_status: 1,
+          staff_status: 0,
+          code: null,
+          level_time: "1572233108"
+        }
+      ],
+
+      timer: "",
+      num: 0,
+      middleShow: false,
+      anwserShow: false,
+      radio1: "1",
+      radio2: "1",
+      radio3: "1",
+      radio4: "1",
+      anshow1: false,
+      anshow2: false,
+      anshow3: false,
+      anshow4: false,
+      number: 1,
+      sort1: {},
+      sort2: {},
+      sort3: {},
+      content1: "",
+      content2: "",
+      content3: "",
+      money1: -1,
+      money2: -1,
+      banner: "",
+      type: -1,
+      level: -1,
+      load: "",
+      cid: -1,
+      personList: []
+    };
+  },
+  methods: {
+    rou() {
+      this.uid = window.localStorage.uid;
+      this.cid = 19;
+      this.$router.push({
+        path: "/rou",
+        query: { uid: this.uid, cid: this.cid }
+      });
+      console.log(this.uid, this.cid);
+    },
+    showPopup(type, cid = -1) {
+      this.middleShow = false;
+
+      this.cid = cid;
+      this.type = type;
+
+      if (this.type === 1) {
+        if (this.level == 1) {
+          this.$toast.success("您已经是会员了");
+          return;
+        }
+      } else if (this.type === 2) {
+        if (this.level == 2) {
+          this.$toast.success("您已经是会员了");
+          return;
+        }
+      }
+      this.show = true;
+
+      // var that=this
+
+      // var loading=that.$loading();
+      // setTimeout(() => {
+      //   loading.close();
+      // }, 2000)
+    },
+    hide() {
+      this.show = false;
+      this.middleShow = false;
+      this.anwserShow = false;
+    },
+    showMiddle() {
+      this.middleShow = true;
+    },
+    pay() {
+      this.middleShow = false;
+      this.show = true;
+    },
+    showAnswer() {
+      this.anwserShow = true;
+    },
+    jumpStudy(cid) {
+      this.$router.push("/study?cid=" + cid);
+    },
+    next() {
+      var that = this;
+
+      if (that.number == 1) {
+        // console.log("第一题")
+        if (that.radio1 != 3) {
+          // console.log("大错了")
+          if (that.anshow1 == false) {
+            that.anshow1 = true;
+            // console.log("显示答案")
+            return;
+          } else {
+            this.number = 2;
+            return;
+          }
+        } else {
+          this.number = 2;
+          return;
+        }
+      }
+      if (that.number == 2) {
+        if (that.radio2 != 4) {
+          if (that.anshow2 == false) {
+            that.anshow2 = true;
+            return;
+          } else {
+            this.number = 3;
+            return;
+          }
+        } else {
+          this.number = 3;
+          return;
+        }
+      }
+      if (that.number == 3) {
+        if (that.radio3 != 2) {
+          if (that.anshow3 == false) {
+            that.anshow3 = true;
+            return;
+          } else {
+            this.number = 4;
+            return;
+          }
+        } else {
+          this.number = 4;
+          return;
+        }
+      }
+      if (that.number == 4) {
+        if (that.radio4 != 2) {
+          if (that.anshow4 == false) {
+            that.anshow4 = true;
+            return;
+          } else {
+            that.number = 5;
+          }
+        } else {
+          that.number = 5;
+        }
+      }
+      if (that.number == 5) {
+        that.anwserShow = false;
+        that.number = 1;
+        that.anshow1 = false;
+        that.anshow2 = false;
+        that.anshow3 = false;
+        that.anshow4 = false;
+        that.$router.push("/fackback2?cid=" + that.sort3.id);
+      }
+    },
+    wxPay() {
+      let that = this;
+      let money;
+
+      let data = {
+        uid: window.localStorage.uid,
+        cid: 19,
+        price: -1,
+        type: "WeChat"
+      };
+      if (that.cid > -1) {
+        data.cid = that.cid;
+      } else {
+        data.cid = "";
+      }
+      console.log(that.type);
+      //普通成员
+      if (that.type === 1) {
+        data.price = that.money1;
+        data.cid = that.cid;
+        if (this.level == 1) {
+          this.$toast.success("您已经是会员了");
+          return;
+        }
+      } else if (that.type === 2) {
+        data.price = that.money2;
+        delete data.cid;
+        if (this.level == 2) {
+          this.$toast.success("您已经是会员了");
+          return;
+        }
+      }
+      console.log(data);
+
+      that.$pay("/buy_courses", data, that).then(() => {
+        that.$router.push("/paysuccess");
+      });
+    },
+    Alipay() {
+      let money, cid, str;
+
+      if (this.type === 1) {
+        if (this.level == 1) {
+          this.$toast.success("您已经是会员了");
+          return;
+        }
+        money = this.money1;
+        cid = this.cid;
+        str = `?uid=${window.localStorage.uid}&cid=${cid}&price=${money}&type=Alipay`;
+      } else if (this.type === 2) {
+        if (this.level == 2) {
+          this.$toast.success("您已经是会员了");
+          return;
+        }
+        money = this.money2;
+
+        str = `?uid=${window.localStorage.uid}&price=${money}&type=Alipay`;
+      }
+
+      window.location.href =
+        "http://www.shanshangdajiazu.com/pay/index.html" + str;
+    },
+    getShowList() {
+      let that = this;
+      let add = 1;
+      that.timer = setInterval(() => {
+        if (that.list.length <= 5) {
+          clearInterval(that.timer);
+        } else {
+          that.num += add;
+
+          if (that.num > that.list.length - 5) {
+            //that.num = 1;
+            var listnew = that.list;
+
+            var length = that.list.length;
+            for (var i = 0; i < length; i++) {
+              listnew.push(that.list[i]);
+            }
+
+            that.list = listnew;
+          } else if (that.num <= 1) {
+            add = 1;
+          }
+        }
+      }, 2000);
+    },
+    getData() {
+      let that = this;
+
+      that.$get("/home").then(res => {
+        that.banner = res.data.banner.b_url;
+        that.sort1 = res.data.sort[0];
+
+        that.content1 = that.sort1.content[0];
+        that.content2 = that.sort1.content[1];
+        that.content3 = that.sort1.content[2];
+
+        that.sort2.img = res.data.sort[1].content[0].img;
+        that.sort2.title = res.data.sort[1].content[0].c_name;
+        that.sort2.id = res.data.sort[1].content[0].id;
+        that.sort3.img = res.data.sort[2].content[0].img;
+        that.sort3.title = res.data.sort[2].content[0].c_name;
+        that.sort3.id = res.data.sort[2].content[0].id;
+
+        that.money1 = res.data.money[0].price;
+        that.money2 = res.data.money[1].price;
+
+        console.log(res.data);
+        setTimeout(() => {
+          // that.load.close()
+        }, 500);
+        // console.log(that.sort1)
+      });
+      that.$post("/refresh", { uid: window.localStorage.uid }).then(res => {
+        console.log(res);
+        window.sessionStorage.level = that.level = res.data.level;
+      });
+      that.$get("/carousel").then(res => {
+        console.log(res["data"]);
+
+        this.list = res["data"];
+        // that.list=res.data
+        that.list.sort(() => 0.5 - Math.random());
+      });
+    }
+  },
+  created() {
+    this.$config();
+    // this.load=this.$loading()
+    this.getShowList();
+    this.getData();
+  },
+  mounted() {
+    // let that=this
+    // var wow =new WOW({
+    //   boxClass:"wow",
+    //   live:false,
+    //   offset:0,
+    //   moblie:true
+    // })
+    // wow.init()
+    // that.$config()
+    //  let data={
+    //     uid:window.sessionStorage.uid,
+    //     cid:19,
+    //     price:1,
+    //     type:"微信"
+    //   }
+    //   var timer;
+    //   timer=setInterval(()=>{
+    //     var button= that.$refs.pay
+    //      if(button){
+    //        clearInterval(timer)
+    //        that.$pay('/buy_courses',button,data)
+    //      }
+    //     // that.$pay('/buy_courses',data,button)
+    //   },1000)
+  },
+  beforeDestroy() {
+    clearInterval(this.timer);
+  }
+};
+</script>
+
+
+
+
+<style scoped>
+.box-line {
+  display: flex;
+  padding: 0 0 0 0.5rem;
+  align-items: center;
+  margin: 0.5rem;
+}
+.box-line img {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+}
+.box-line div {
+  font-size: 0.8rem;
+  margin: 0 0 0 0.5rem;
+  font-family: SourceHanSansCN-Normal;
+  font-weight: 400;
+  color: rgba(126, 156, 255, 1);
+}
+.subbox {
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem 0;
+}
+.subbox div img {
+  width: 100%;
+  height: 7rem;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+}
+.subbox div h4 {
+  margin: 0.5rem 0 0 0.3rem;
+  font-size: 1rem;
+  font-family: SourceHanSansCN-Regular;
+  font-weight: 400;
+  color: rgba(51, 51, 51, 1);
+}
+.subbox div p {
+  width: 90%;
+  margin: 0.2rem 0 0.5rem 0.3rem;
+  font-size: 0.7rem;
+  font-family: SourceHanSansCN-Normal;
+  font-weight: 400;
+  color: rgba(154, 147, 147, 1);
+}
+.bottom {
+  font-size: 0.7rem;
+  letter-spacing: 0.3rem;
+  font-family: SourceHanSansCN-Regular;
+  font-weight: 400;
+  color: rgba(101, 101, 101, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5rem;
+}
+.img {
+  width: 96vw;
+  margin: 0.5rem auto 1rem;
+  display: block;
+  border-radius: 8px;
+}
+.bottom-btn {
+  display: block;
+  width: 90vw;
+  height: 2.7rem;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  font-family: SourceHanSansCN-Medium;
+  font-weight: 500;
+  color: rgba(253, 254, 255, 1);
+  text-shadow: 0px 3px 2px rgba(174, 185, 190, 0.7);
+  background: url("../assets/index/btn-bg.png") no-repeat;
+  background-size: 100%;
+  letter-spacing: 0.2rem;
+  overflow: hidden;
+}
+.bottom-div {
+  width: 100vw;
+  background: #fff;
+  box-shadow: 0 2px 5px #ccc;
+  padding: 0.5rem 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+.pop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  background: #fff;
+}
+.pop div {
+  font-size: 1rem;
+  font-family: SourceHanSansCN-Medium;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 1);
+  line-height: 2rem;
+}
+.pop img {
+  position: absolute;
+  right: 1rem;
+  top: 0.7rem;
+  width: 0.8rem;
+  height: 0.8rem;
+}
+.weixin,
+.ali {
+  display: flex;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  background: #fff;
+}
+.weixin img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.ali img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.ali span,
+.weixin span {
+  padding-left: 1.5rem;
+  font-size: 1rem;
+  font-family: SourceHanSansCN-Regular;
+  font-weight: 400;
+  color: rgba(92, 92, 92, 1);
+  letter-spacing: 0.1rem;
+}
+.van-popup {
+  background: rgba(0, 0, 0, 0);
+}
+.answer-title {
+  position: relative;
+  top: 0;
+  left: 0;
+  font-size: 1rem;
+  font-family: SourceHanSansCN-Regular;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  position: absolute;
+  top: 1.5rem;
+  left: 4rem;
+  letter-spacing: 0.1rem;
+}
+
+.next {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 3.5rem;
+  display: block;
+  width: 55vw;
+  height: 2.5rem;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  font-family: SourceHanSansCN-Medium;
+  font-weight: 500;
+  color: rgba(253, 254, 255, 1);
+  text-shadow: 0px 3px 2px rgba(174, 185, 190, 0.7);
+  background: url("../assets/index/btnnext.png") no-repeat;
+  background-size: 100%;
+  letter-spacing: 0.2rem;
+}
+.answer-list {
+  position: absolute;
+  top: 5rem;
+  left: 0rem;
+  padding: 1.5rem 1rem;
+  font-size: 1rem;
+  width: 100%;
+  display: flex;
+}
+.no-select {
+  border-radius: 8px;
+  height: 2rem;
+  box-shadow: 0 0 2px #ccc;
+  margin: 1.5rem auto 0;
+  color: rgba(73, 73, 73, 1);
+}
+.select {
+  background-color: #7b54e8;
+  border-radius: 8px;
+  height: 2rem;
+  box-shadow: 0 0 2px #7b54e8;
+  margin: 1.5rem auto 0;
+}
+.answer-content >>> .van-cell__title {
+  font-size: 0.8rem;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 254, 254, 1);
+  display: flex;
+  align-items: center;
+}
+.answer-content .no-select >>> .van-cell__title {
+  color: rgba(73, 73, 73, 1);
+}
+.answer-content .no-select >>> .van-cell__title span {
+  white-space: nowrap;
+}
+.answer-content .select >>> .van-cell__title span {
+  white-space: nowrap;
+}
+.answer {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 1rem;
+}
+.right {
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 0.5rem;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 53, 53, 1);
+}
+.trans {
+  transform: translateY(0);
+  transition: -webkit-transform 0.5s;
+}
+
+/* .fade-enter-active, .fade-leave-active {
+  transition: all 1s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+  transform:translate3d(-120px,-500px,0) scale(.5)
+} */
+
+.index >>> .mu-ripple-wrapper {
+  height: 100% !important;
+}
+</style>

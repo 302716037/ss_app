@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="box-index" style="width:75vw;padding:2rem" v-html="content">
+        <div class="box-index" style="width:75vw;padding:2rem;color:green;" v-html="content">
             
         </div>
     </div>

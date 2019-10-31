@@ -19,7 +19,7 @@
     <h4 class="sub-title" style="font-size:.8rem;">老师示范 &nbsp; 学员跟练</h4>
 
     <div class="subbox">
-        <div class="wow bounceInDown" data-wow-delay="0.2s" style="border-radius:6px;box-shadow:0px 4px 10px 0px rgba(153,174,223,0.57);width:31vw" @click="level<1?showPopup(1,content1.id):jumpStudy(content1.id)">
+        <div class="wow bounceInDown" data-wow-delay="0.2s" style="border-radius:6px;box-shadow:0px 4px 10px 0px rgba(153,174,223,0.57);width:31vw" @click='rou()'><!--@click="level<1?showPopup(1,content1.id):jumpStudy(content1.id)"-->
           <img v-lazy="'http://www.shanshangdajiazu.com'+content1.img" alt="">
           <h4>爱享训练</h4>
           <p>认识自己，把握自己，爱自己</p>
@@ -355,6 +355,12 @@ export default {
     }
   },
   methods: {
+    rou(){
+      this.uid=window.localStorage.uid
+      this.cid=19
+      this.$router.push({path:'/rou',query:{uid:this.uid,cid:this.cid}})
+      console.log(this.uid,this.cid)
+    },
     showPopup(type,cid=-1){
 
 
@@ -520,8 +526,6 @@ export default {
         that.$router.push('/paysuccess')
       })
 
-
-
     },
     Alipay(){
       
@@ -553,20 +557,24 @@ export default {
       let that=this;
       let add=1
       that.timer=setInterval(()=>{
+
         if(that.list.length<=5){
             clearInterval(that.timer)
+
         }else{
           
           that.num+=add;
-          // if(that.num==that.list.length-4){
-          //   add=-1
-          // }
-          // console.log(that.num,that.list.length)
-          if(that.num==that.list.length-5){
 
-             clearInterval(that.timer)
+          if(that.num>=that.list.length-5){
 
+             add=-1
+
+          }else if(that.num<=1){
+            add=1
           }
+
+
+          console.log(that.num)
           
         }
         

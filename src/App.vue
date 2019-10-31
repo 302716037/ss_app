@@ -37,12 +37,16 @@ export default {
       }
   },
   created(){
-   
+   //this.getData()
   }
 }
 </script>
 
 <style>
+*{
+  margin: 0;
+  padding: 0;
+}
 .box-home{
   width: 94vw;
   display: flex;
@@ -89,6 +93,19 @@ export default {
  #nprogress .bar {
       background: transparent !important; 
   }
+
+
+
+/*文字禁止复制*/
+*{
+ -webkit-user-select:none;
+ -khtml-user-select:none;
+ -moz-user-select:none;
+ -ms-user-select:none;
+ user-select:none;	
+ }
+
+
 
 
 
